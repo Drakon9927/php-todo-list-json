@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista ToDo</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>Lista ToDo</h1>
+        <ul>
+            <li v-for="todo in todos" :key="todo.id">
+                {{ todo.task }}
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                todos: []
+            },
+            created() {
+                this.fetchTodos();
+            },
+            methods: {
+                fetchTodos() {
+                    axios.get('api.php')
+                        .then(response => {
+                            this.todos = response.data;
+                        })
+                }
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+</html>
