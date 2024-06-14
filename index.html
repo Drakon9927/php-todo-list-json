@@ -5,15 +5,18 @@
     <title>Lista ToDo</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     <div id="app">
         <h1>Lista ToDo</h1>
         <ul>
-            <li v-for="todo in todos" :key="todo.id">
+            <li v-for="todo in todos" :key="todo.id" :class="{ 'completed': todo.completed }">
+                <input type="checkbox" v-model="todo.completed">
                 {{ todo.task }}
             </li>
         </ul>
+        <button @click="addTodo">Aggiungi Task</button>
     </div>
 
     <script>
@@ -31,11 +34,12 @@
                         .then(response => {
                             this.todos = response.data;
                         })
+                },
+                addTodo() {
+                    
                 }
             }
         });
     </script>
-
- 
 </body>
 </html>
