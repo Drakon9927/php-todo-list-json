@@ -16,30 +16,53 @@
                 {{ todo.task }}
             </li>
         </ul>
+        <input v-model="newTaskName" placeholder="Inserisci un nuovo task" />
         <button @click="addTodo">Aggiungi Task</button>
     </div>
 
     <script>
         new Vue({
             el: '#app',
-            data: {
-                todos: []
+            data() {
+                return {
+                    todos: [],
+                    newTaskName: ''  // Aggiunto per gestire il nome del nuovo task
+                };
             },
             created() {
                 this.fetchTodos();
             },
             methods: {
                 fetchTodos() {
-                    axios.get('api.php')
+                    axios.get('list.php')
                         .then(response => {
                             this.todos = response.data;
                         })
+                        .catch(error => {  
+                            console.error('Error fetching todos:', error);
+                        });
                 },
                 addTodo() {
-                    
+                    // Assicurati che il task non sia vuoto
+                    if (!this.newTaskName) {
+                        alert("Il task non può essere vuoto!");
+                        return;
+                    }
+                    const formData = new FormData();
+                    formData.append('task', this.newTaskName);
+                    formData.append('completed', false);
+
+                    axios.post('add.php', formData)
+                        .then(response => {
+                            this.todos = response.data; // Aggiorna la lista dei todos con la risposta dal server
+                            this.newTaskName = ''; // Pulisce l'input dopo l'aggiunta
+                        })
+                        .catch(error => {
+                            console.error('Error adding todo:', error);
+                        });
                 }
             }
-        });
+        }).$mount('#app');
     </script>
 </body>
 </html>
